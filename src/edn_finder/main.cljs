@@ -9,7 +9,8 @@
 (defonce store-ref (atom {:data nil}))
 
 (defn dispatch! [op op-data]
-  (let [new-store (case (:load-data (assoc @store-ref :data op-data)) @store-ref)]
+  (println "Action:" op (type op-data))
+  (let [new-store (case op :load-data (assoc @store-ref :data op-data) @store-ref)]
     (reset! store-ref new-store)))
 
 (defonce states-ref (atom {}))

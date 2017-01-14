@@ -35,7 +35,7 @@
   (make-html
     (html {}
       (head {}
-        (title {:attrs {:innerHTML "Stack Workflow"}})
+        (title {:attrs {:innerHTML "EDN Finder"}})
         (link {:attrs {:rel "icon" :type "image/png" :href "http://logo.Respo.org/mvc.png"}})
         (link {:attrs {:rel "stylesheet" :type "text/css" :href "style.css"}})
         (link (:attrs {:rel "manifest" :href "manifest.json"}))

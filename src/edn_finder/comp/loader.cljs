@@ -6,7 +6,8 @@
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
             [cljs-http.client :as http]
-            [cljs.core.async :refer [<!]])
+            [cljs.core.async :refer [<!]]
+            [cljs.reader :refer [read-string]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn update-state [state k v] (assoc state k v))
@@ -16,7 +17,9 @@
     (go
      (let [response (<! (http/get url {:with-credentials? false}))]
        (if (= 200 (:status response))
-         (let [content (:body response)] (dispatch! :load-data content)))))))
+         (let [content (:body response)]
+           (println (type content))
+           (dispatch! :load-data (read-string content))))))))
 
 (def style-input {:width 400})
 
@@ -26,7 +29,7 @@
   {:event {:input (fn [e dispatch!] (mutate! path (:value e)))},
    :attrs {:value (get state path)}})
 
-(defn init-state [] {:url " http://repo.cumulo.org/woodenlist/woodenlist-storage.edn"})
+(defn init-state [] {:url "http://repo.cumulo.org/woodenlist/woodenlist-storage.edn"})
 
 (defn render []
   (fn [state mutate!]
