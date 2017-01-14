@@ -11,11 +11,10 @@
 
 (def style-keyword
   {:min-width 120,
-   :color :white,
+   :color colors/texture-light,
    :text-align :center,
-   :background-color colors/attractive,
+   :background-color colors/paper,
    :padding "0 8px"})
 
-(defn render [chunk] (fn [state mutate!] (comp-text chunk style-keyword)))
-
-(def comp-keyword (create-comp :keyword render))
+(def comp-keyword
+  (create-comp :keyword (fn [chunk] (fn [state mutate!] (comp-text chunk style-keyword)))))

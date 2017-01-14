@@ -13,19 +13,22 @@
 
 (def style-row {})
 
-(defn render [db]
-  (fn [state mutate!]
-    (div
-     {}
-     (div {} (comp-text (pr-str state) nil))
-     (div
-      {:style (merge ui/row style-row)}
-      (->> (range 0 (inc (count state)))
-           (map-indexed
-            (fn [idx x]
-              [idx
-               (let [chunk-path (subvec state 0 idx)
-                     chunk (if (= idx 0) db (get-in db chunk-path))]
-                 (comp-displayer chunk chunk-path mutate!))])))))))
-
-(def comp-finder (create-comp :finder init-state update-state render))
+(def comp-finder
+  (create-comp
+   :finder
+   init-state
+   update-state
+   (fn [db]
+     (fn [state mutate!]
+       (div
+        {}
+        (div {} (comp-text (pr-str state) nil))
+        (div
+         {:style (merge ui/row style-row)}
+         (->> (range 0 (inc (count state)))
+              (map-indexed
+               (fn [idx x]
+                 [idx
+                  (let [chunk-path (subvec state 0 idx)
+                        chunk (if (= idx 0) db (get-in db chunk-path))]
+                    (comp-displayer chunk chunk-path mutate!))])))))))))

@@ -31,19 +31,22 @@
 
 (defn init-state [] {:url "http://repo.cumulo.org/woodenlist/woodenlist-storage.edn"})
 
-(defn render []
-  (fn [state mutate!]
-    (div
-     {:style style-container}
-     (input
-      (merge-with
-       merge
-       {:style (merge ui/input style-input),
-        :attrs {:placeholder "URL for EDN file...", :type "url"}}
-       (two-way mutate! :url state)))
-     (comp-space 8 nil)
-     (button
-      {:style ui/button, :event {:click (on-load (:url state))}}
-      (comp-text "Load" nil)))))
-
-(def comp-loader (create-comp :loader init-state update-state render))
+(def comp-loader
+  (create-comp
+   :loader
+   init-state
+   update-state
+   (fn []
+     (fn [state mutate!]
+       (div
+        {:style style-container}
+        (input
+         (merge-with
+          merge
+          {:style (merge ui/input style-input),
+           :attrs {:placeholder "URL for EDN file...", :type "url"}}
+          (two-way mutate! :url state)))
+        (comp-space 8 nil)
+        (button
+         {:style ui/button, :event {:click (on-load (:url state))}}
+         (comp-text "Load" nil)))))))

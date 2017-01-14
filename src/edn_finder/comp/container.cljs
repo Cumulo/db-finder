@@ -10,12 +10,13 @@
 
 (def style-container {:padding 16})
 
-(defn render [store]
-  (fn [state mutate!]
-    (div
-     {:style (merge ui/global style-container)}
-     (comp-loader)
-     (comp-space nil 8)
-     (comp-finder (:data store)))))
-
-(def comp-container (create-comp :container render))
+(def comp-container
+  (create-comp
+   :container
+   (fn [store]
+     (fn [state mutate!]
+       (div
+        {:style (merge ui/global style-container)}
+        (comp-loader)
+        (comp-space nil 8)
+        (comp-finder (:data store)))))))

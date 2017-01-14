@@ -29,10 +29,11 @@
 
 (defn render-any [chunk] (div {} (comp-text (pr-str chunk) nil)))
 
-(defn render [chunk path mutate-finder!]
-  (fn [state mutate!]
-    (div
-     {:style style-container}
-     (cond (map? chunk) (render-map chunk path mutate-finder!) :else (render-any chunk)))))
-
-(def comp-displayer (create-comp :displayer render))
+(def comp-displayer
+  (create-comp
+   :displayer
+   (fn [chunk path mutate-finder!]
+     (fn [state mutate!]
+       (div
+        {:style style-container}
+        (cond (map? chunk) (render-map chunk path mutate-finder!) :else (render-any chunk)))))))

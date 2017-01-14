@@ -7,23 +7,41 @@
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]))
 
+(def style-value
+  {:min-width 80,
+   :color :white,
+   :text-align :center,
+   :background-color colors/motif-light,
+   :max-width 200})
+
 (def style-entry
   {:min-width 120,
    :color :white,
    :text-align :center,
-   :background-color colors/verdant,
+   :background-color colors/motif-dark,
    :cursor :pointer})
 
-(defn render [data on-display]
-  (fn [state mutate!]
-    (cond
-      (map? data) (div {:style style-entry, :event {:click on-display}} (comp-text "Map" nil))
-      (vector? data) (div {:event {:click on-display}} (comp-text "Vector" nil))
-      (set? data) (comp-text "Set" nil)
-      (number? data) (comp-text "Number" nil)
-      (string? data) (comp-text "String" nil)
-      (keyword? data) (comp-text "Keyword" nil)
-      (nil? data) (comp-text "nil" nil)
-      :else (comp-text (str "Not recognized " (pr-str data)) nil))))
-
-(def comp-entry (create-comp :entry render))
+(def comp-entry
+  (create-comp
+   :entry
+   (fn [data on-display]
+     (fn [state mutate!]
+       (cond
+         (map? data)
+           (div
+            {:style style-entry, :event {:click on-display}}
+            (comp-text (str "Map:" (count data)) nil))
+         (vector? data)
+           (div
+            {:style style-entry, :event {:click on-display}}
+            (comp-text (str "Vector:" (count data)) nil))
+         (set? data)
+           (div
+            {:style style-entry, :event {:click on-display}}
+            (comp-text (str "Set:" (count data)) nil))
+         (number? data) (comp-text (pr-str data) style-value)
+         (string? data) (comp-text (pr-str data) style-value)
+         (keyword? data) (comp-text (pr-str data) style-value)
+         (boolean? data) (comp-text (pr-str data) style-value)
+         (nil? data) (comp-text "nil" style-value)
+         :else (comp-text (str "Not recognized " (pr-str data)) nil))))))
