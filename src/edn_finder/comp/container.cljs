@@ -4,13 +4,18 @@
             [respo-ui.style :as ui]
             [respo.alias :refer [create-comp div span]]
             [respo.comp.space :refer [comp-space]]
-            [respo.comp.text :refer [comp-text]]))
+            [respo.comp.text :refer [comp-text]]
+            [edn-finder.comp.loader :refer [comp-loader]]
+            [edn-finder.comp.finder :refer [comp-finder]]))
 
-(defn render []
+(def style-container {:padding 16})
+
+(defn render [store]
   (fn [state mutate!]
     (div
-     {:style (merge ui/global)}
-     (comp-space "8px" nil)
-     (div {:style ui/button} (comp-text "demo" nil)))))
+     {:style (merge ui/global style-container)}
+     (comp-loader)
+     (comp-space nil 8)
+     (comp-finder (:data store)))))
 
 (def comp-container (create-comp :container render))

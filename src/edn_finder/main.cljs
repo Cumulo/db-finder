@@ -6,9 +6,11 @@
             [edn-finder.comp.container :refer [comp-container]]
             [cljs.reader :refer [read-string]]))
 
-(defn dispatch! [op op-data] )
+(defonce store-ref (atom {:data nil}))
 
-(defonce store-ref (atom {}))
+(defn dispatch! [op op-data]
+  (let [new-store (case (:load-data (assoc @store-ref :data op-data)) @store-ref)]
+    (reset! store-ref new-store)))
 
 (defonce states-ref (atom {}))
 
