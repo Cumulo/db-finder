@@ -4,14 +4,24 @@
              :refer
              [render! clear-cache! falsify-stage! render-element gc-states!]]
             [edn-finder.comp.container :refer [comp-container]]
-            [cljs.reader :refer [read-string]]))
+            [cljs.reader :refer [read-string]]
+            [cljs.core.async :refer [<!]]
+            [cljs-http.client :as http])
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defonce store-ref (atom {:data nil}))
 
 (defn dispatch! [op op-data]
   (println "Action:" op (type op-data))
-  (let [new-store (case op :load-data (assoc @store-ref :data op-data) @store-ref)]
-    (reset! store-ref new-store)))
+  (go
+   (let [new-store (case op
+                     :load-data
+                       (let [response (<! (http/get op-data {:with-credentials? false}))]
+                         (if (= 200 (:status response))
+                           (let [content (:body response)]
+                             (assoc @store-ref :data (read-string content)))))
+                     @store-ref)]
+     (reset! store-ref new-store))))
 
 (defonce states-ref (atom {}))
 

@@ -5,21 +5,11 @@
             [respo.alias :refer [create-comp div input button]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
-            [cljs-http.client :as http]
-            [cljs.core.async :refer [<!]]
-            [cljs.reader :refer [read-string]])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+            [cljs.reader :refer [read-string]]))
 
 (defn update-state [state k v] (assoc state k v))
 
-(defn on-load [url]
-  (fn [e dispatch!]
-    (go
-     (let [response (<! (http/get url {:with-credentials? false}))]
-       (if (= 200 (:status response))
-         (let [content (:body response)]
-           (println (type content))
-           (dispatch! :load-data (read-string content))))))))
+(defn on-load [url] (fn [e dispatch!] (dispatch! :load-data url)))
 
 (def style-input {:width 400})
 

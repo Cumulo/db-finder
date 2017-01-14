@@ -24,7 +24,7 @@
         (script {:attrs {:src "main.js"}})))))
 
 (defn generate-html [ssr-stages]
-  (let [ tree (comp-container {} ssr-stages)
+  (let [ tree (comp-container {:data nil} ssr-stages)
          html-content (make-string tree)]
     (html-dsl {:build? true} html-content ssr-stages)))
 

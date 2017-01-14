@@ -5,9 +5,7 @@
             [respo-ui.style.colors :as colors]
             [respo.alias :refer [create-comp div input button]]
             [respo.comp.space :refer [comp-space]]
-            [respo.comp.text :refer [comp-text]]
-            [cljs-http.client :as http]
-            [cljs.core.async :refer [<!]]))
+            [respo.comp.text :refer [comp-text]]))
 
 (def style-keyword
   {:min-width 120,

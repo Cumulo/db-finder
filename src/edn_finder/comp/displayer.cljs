@@ -29,6 +29,18 @@
 
 (defn render-any [chunk] (div {} (comp-text (pr-str chunk) nil)))
 
+(defn render-set [chunk path mutate-finder!]
+  (div
+   {}
+   (->> chunk
+        (map-indexed
+         (fn [k v]
+           [k
+            (div
+             {:style (merge ui/row style-row)}
+             (comp-keyword (inc k))
+             (comp-entry v (on-display (conj path (inc k)) mutate-finder!)))])))))
+
 (def comp-displayer
   (create-comp
    :displayer
@@ -36,4 +48,7 @@
      (fn [state mutate!]
        (div
         {:style style-container}
-        (cond (map? chunk) (render-map chunk path mutate-finder!) :else (render-any chunk)))))))
+        (cond
+          (map? chunk) (render-map chunk path mutate-finder!)
+          (set? chunk) (render-set chunk path mutate-finder!)
+          :else (render-any chunk)))))))
